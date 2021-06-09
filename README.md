@@ -3,7 +3,7 @@
 **Project 4 - Products And Shopping Cart**
 ### admin-panel-link
 
-[front-repository](https://github.com/MostafaZr-Dev/20projects-4-simpleShop-adminPanel)
+[admin-panel-repository](https://github.com/MostafaZr-Dev/20projects-4-simpleShop-adminPanel)
 
 ### front-link
 [front-repository](https://github.com/MostafaZr-Dev/20projects-simpleShop-front)
