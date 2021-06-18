@@ -1,9 +1,12 @@
 const express = require("express");
 
-const { adminRouter } = require("@components/products/router");
-
+const {
+  adminRouter: productAdminRouter,
+} = require("@components/products/router");
+const categoryRouter = require("@components/category/router");
 const router = express.Router();
 
-router.use("/products", adminRouter);
+router.use("/products", productAdminRouter);
+router.use("/category", categoryRouter);
 
 module.exports = router;

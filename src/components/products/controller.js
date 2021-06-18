@@ -1,6 +1,7 @@
 const productService = require("./services");
 const transformProduct = require("./transformer");
 const fileService = require("@services/fileService");
+const _ = require("lodash");
 
 const {
   NotFoundException,
@@ -31,21 +32,39 @@ exports.product = async (req, res, next) => {
 };
 
 exports.products = async (req, res) => {
-  const products = await productService.findAll();
+  const { productQuery, sortQuery, categoryQuery } = req.filterParams;
+
+  const products = await productService.findAll(
+    productQuery,
+    categoryQuery,
+    sortQuery
+  );
+
+  let maxProductPrice = await productService.findAll(
+    {},
+    categoryQuery,
+    "-price"
+  );
+
+  if (maxProductPrice.data.length === 0) {
+    maxProductPrice = await productService.findAll({}, {}, "-price");
+  }
 
   if (!products.success) {
     return res.status(500).send({ success: false });
   }
 
+  const transformedProducts = transformProduct.getProducts(products.data);
   res.send({
     success: true,
-    products: transformProduct.getProducts(products.data),
+    products: transformedProducts.products,
+    maxPrice: maxProductPrice.data[0].price,
   });
 };
 
 exports.create = async (req, res, next) => {
   try {
-    const { title, price, discountedPrice, count } = req.body;
+    const { title, price, discountedPrice, category, count } = req.body;
 
     const { thumbnail, gallery } = req.files;
 
@@ -60,6 +79,7 @@ exports.create = async (req, res, next) => {
       price,
       discountedPrice,
       count,
+      category,
     };
 
     const create = await productService.save(data);
@@ -71,7 +91,6 @@ exports.create = async (req, res, next) => {
     res.status(201).send({
       success: true,
     });
-    
   } catch (error) {
     next(error);
   }

@@ -3,12 +3,13 @@ const express = require("express");
 const productsController = require("./controller");
 const { upload } = require("@middlewares/upload-engine/multer");
 const imageProccessing = require("@middlewares/imageProccessing");
+const queryProcessing = require("@middlewares/queryProcessing");
 
 const frontRouter = express.Router();
 const adminRouter = express.Router();
 
 //admin
-adminRouter.get("/", productsController.products);
+adminRouter.get("/", queryProcessing, productsController.products);
 adminRouter.get("/:id", productsController.product);
 adminRouter.post(
   "/create",
@@ -33,7 +34,7 @@ adminRouter.put(
 adminRouter.delete("/:id", productsController.delete);
 
 //front
-frontRouter.get("/", productsController.products);
+frontRouter.get("/", queryProcessing, productsController.products);
 frontRouter.get("/:id", productsController.product);
 
 module.exports = {

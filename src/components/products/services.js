@@ -16,15 +16,24 @@ exports.save = async (data) => {
   }
 };
 
-exports.findAll = async () => {
+exports.findAll = async (productQuery, categoryQuery, sortQuery) => {
   try {
-    const data = await ProductModel.find().sort({ createdAt: -1 }).exec();
+    let data = await ProductModel.find(productQuery)
+      .populate({
+        path: "category",
+        match: categoryQuery,
+      })
+      .sort(sortQuery)
+      .exec();
+
+    data = data.filter((product) => product.category);
 
     return {
       success: true,
       data,
     };
   } catch (error) {
+    console.log(error);
     return {
       success: false,
     };

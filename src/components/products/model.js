@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema, ObjectId } = mongoose;
+const { CategorySchema } = require("../category/model");
 
 const GallerySchema = new Schema({
   id: ObjectId,
@@ -14,6 +15,14 @@ const ProductsSchema = new Schema({
   discountedPrice: Number,
   count: Number,
   soldCount: {
+    type: Number,
+    default: 0,
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+  },
+  likesCount: {
     type: Number,
     default: 0,
   },
