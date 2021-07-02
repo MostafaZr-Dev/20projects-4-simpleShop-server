@@ -11,9 +11,11 @@
     "@infrastructure": "src/infrastructure",
     "@services": "src/services",
     "@middlewares": "src/middlewares",
-    "@components": "src/components"
+    "@components": "src/components",
+    "@exceptions": "src/components/exceptions"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",

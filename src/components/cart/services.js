@@ -1,36 +1,24 @@
-const { promisify } = require("util");
-
-const { redisClient } = require("@infrastructure/redis");
-
-const getAsync = promisify(redisClient.get).bind(redisClient);
-const setAsync = promisify(redisClient.set).bind(redisClient);
+const redisService = require("@services/redisService");
 
 exports.addToCart = async (token, item) => {
-  const cart = await getAsync(`cart:${token}`);
+  const cart = await redisService.getItems(`cart:${token}`);
 
-  const parsedCart = cart ? JSON.parse(cart) : null;
-
-  if (parsedCart) {
-    const product = parsedCart
-      .filter((cartItem) => cartItem.id === item.id)
-      .pop();
+  if (cart) {
+    const product = cart.filter((cartItem) => cartItem.id === item.id).pop();
 
     let newCart = [];
 
     if (product) {
-      newCart = parsedCart.map((cartItem) => {
+      newCart = cart.map((cartItem) => {
         if (cartItem.id === item.id) {
           cartItem.quantity = cartItem.quantity + 1;
         }
 
-        return {
-          id: cartItem.id,
-          quantity: cartItem.quantity,
-        };
+        return cartItem;
       });
     } else {
       newCart = [
-        ...parsedCart,
+        ...cart,
         {
           id: item.id,
           quantity: item.quantity,
@@ -38,13 +26,13 @@ exports.addToCart = async (token, item) => {
       ];
     }
 
-    await setAsync(`cart:${token}`, JSON.stringify(newCart));
+    await redisService.setItem(`cart:${token}`, JSON.stringify(newCart));
 
     return {
       success: true,
     };
   } else {
-    await setAsync(
+    await redisService.setItem(
       `cart:${token}`,
       JSON.stringify([
         {
@@ -61,17 +49,13 @@ exports.addToCart = async (token, item) => {
 };
 
 exports.getItems = async (token) => {
-  const cart = await getAsync(`cart:${token}`);
-
-  return cart ? JSON.parse(cart) : null;
+  return await redisService.getItems(`cart:${token}`);
 };
 
 exports.updateItemQuantity = async (token, itemID, quantity) => {
-  const cart = await getAsync(`cart:${token}`);
+  const cart = await redisService.getItems(`cart:${token}`);
 
-  const parsedCart = JSON.parse(cart);
-
-  const newCart = parsedCart.map((cartItem) => {
+  const newCart = cart.map((cartItem) => {
     if (cartItem.id === itemID) {
       cartItem.quantity = quantity;
     }
@@ -79,19 +63,17 @@ exports.updateItemQuantity = async (token, itemID, quantity) => {
     return cartItem;
   });
 
-  await setAsync(`cart:${token}`, JSON.stringify(newCart));
+  await redisService.setItem(`cart:${token}`, JSON.stringify(newCart));
 
   return newCart;
 };
 
 exports.deleteItem = async (token, itemID) => {
-  const cart = await getAsync(`cart:${token}`);
+  const cart = await redisService.getItems(`cart:${token}`);
 
-  const parsedCart = JSON.parse(cart);
+  const newCart = cart.filter((item) => item.id !== itemID);
 
-  const newCart = parsedCart.filter((item) => item.id !== itemID);
-
-  await setAsync(`cart:${token}`, JSON.stringify(newCart));
+  await redisService.setItem(`cart:${token}`, JSON.stringify(newCart));
 
   return newCart;
 };
