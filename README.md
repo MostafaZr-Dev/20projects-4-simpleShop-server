@@ -1,6 +1,6 @@
 # 20 PROJECTS CHALLENG
 
-**Project 4,5,6 - Products And Shopping Cart(filter-ordering)**
+**Project 4,5,6,7 - Products And Shopping Cart(filter-ordering-payment)**
 ### admin-panel-link
 
 [admin-panel-repository](https://github.com/MostafaZr-Dev/20projects-4-simpleShop-adminPanel)
@@ -24,6 +24,7 @@
 - shopping cart with redis ( add-to-cart | update-item-quantity | delete-cart-item )
 - filter product (range_price | order | category | search(by_title))
 - ordering (create_order)
+- payment (COD - Online(zarinpal))
 ## How start
 set .env variable
 

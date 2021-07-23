@@ -1,4 +1,5 @@
 const OrderModel = require("./model/order");
+const orderStatus = require("./model/orderStatus");
 
 exports.save = async (data) => {
   try {
@@ -43,4 +44,15 @@ exports.findAll = async (where) => {
       error,
     };
   }
+};
+
+exports.completeOrder = async (orderID) => {
+  await OrderModel.updateOne(
+    {
+      _id: orderID,
+    },
+    {
+      status: orderStatus.PAID,
+    }
+  );
 };

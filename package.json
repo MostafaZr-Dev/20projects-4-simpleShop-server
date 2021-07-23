@@ -12,7 +12,8 @@
     "@services": "src/services",
     "@middlewares": "src/middlewares",
     "@components": "src/components",
-    "@exceptions": "src/components/exceptions"
+    "@exceptions": "src/components/exceptions",
+    "@config": "src/config"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -29,6 +30,7 @@
     "mongoose": "^5.12.12",
     "multer": "^1.4.2",
     "redis": "^3.1.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "zarinpal-checkout": "^0.2.7"
   }
 }
